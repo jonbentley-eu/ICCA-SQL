@@ -29,7 +29,7 @@ JonathanBentley		2025-03-01	Initial Version
 
 
 DECLARE @startDate AS DATETIME = '2026-01-01'
-DECLARE @endDate AS DATETIME = '2026-02-01';
+DECLARE @endDate AS DATETIME = GETDATE();
 
 WITH DischargeHb AS
 (
@@ -44,10 +44,11 @@ FROM DAR.PtLabResult AS l
 INNER JOIN DAR.PtCensus AS c ON l.encounterId = c.encounterId
 INNER JOIN DAR.D_Encounter AS e ON l.encounterId = e.encounterId
 WHERE 
-  attributeDictionaryPropName = 'HgbInt.HaemoglobinMeas'
-  AND l.utcChartTime > @startDate
-  AND l.clinicalUnitId IN ('41', '47', '53', '54', '57')
-  --AND isDischarged = 1
+	attributeDictionaryPropName = 'HgbInt.HaemoglobinMeas'
+	AND l.utcChartTime > @startDate
+	AND l.utcChartTime < @endDate
+	AND l.clinicalUnitId IN ('41', '47', '53', '54', '57')
+	--AND isDischarged = 1
 )
 
 SELECT 
